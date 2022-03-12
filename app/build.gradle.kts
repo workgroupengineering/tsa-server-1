@@ -23,7 +23,7 @@ dependencies {
 
     runtimeOnly("org.springframework.boot:spring-boot-actuator-autoconfigure")
 
-    developmentOnly("org.springframework.boot:spring-boot-devtools:${libs.versions.spring.boot.get()}")
+    developmentOnly("org.springframework.boot:spring-boot-devtools:${libs.versions.springBoot.get()}")
 }
 
 tasks.getByName<BootRun>("bootRun") {

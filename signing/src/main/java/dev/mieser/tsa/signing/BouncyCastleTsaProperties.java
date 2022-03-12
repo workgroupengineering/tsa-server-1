@@ -1,27 +1,22 @@
-package dev.mieser.tsa.signing.config;
+package dev.mieser.tsa.signing;
 
 import static dev.mieser.tsa.domain.HashAlgorithm.SHA256;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import dev.mieser.tsa.domain.HashAlgorithm;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
-
-import dev.mieser.tsa.domain.HashAlgorithm;
-
 @Getter
 @Setter
-@Validated
-@ConfigurationProperties(prefix = "tsa")
-public class TsaProperties {
+@EqualsAndHashCode
+public class BouncyCastleTsaProperties {
 
     /**
      * The hash algorithm which is used to calculate the TSA's certificate identifier ({@code ESSCertIDv2}).
@@ -57,33 +52,5 @@ public class TsaProperties {
      */
     @NotEmpty
     private String policyOid = "1.2";
-
-    /**
-     * Encapsulates the properties for configuring the TSA certificate.
-     */
-    @Valid
-    private CertificateLoaderProperties certificate = new CertificateLoaderProperties();
-
-    @Getter
-    @Setter
-    public static class CertificateLoaderProperties {
-
-        /**
-         * The file system path to the PKCS#12 file containing the certificate and private key. Paths beginning with
-         * {@code classpath:} can be used to read PKCS#12 files from the classpath.
-         * <p/>
-         * Cannot be empty.
-         */
-        @NotEmpty
-        private String path;
-
-        /**
-         * The password of the PKCS#12 file containing the certificate and private key.
-         * <p/>
-         * No password is used by default.
-         */
-        private String password;
-
-    }
 
 }

@@ -1,6 +1,6 @@
 package dev.mieser.tsa.signing.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.mapstruct.factory.Mappers;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,25 +9,30 @@ import org.springframework.context.annotation.Import;
 import dev.mieser.tsa.datetime.api.CurrentDateTimeService;
 import dev.mieser.tsa.datetime.api.DateConverter;
 import dev.mieser.tsa.datetime.config.DateTimeConfiguration;
-import dev.mieser.tsa.signing.BouncyCastleTimeStampAuthority;
-import dev.mieser.tsa.signing.BouncyCastleTimeStampValidator;
-import dev.mieser.tsa.signing.TspParser;
-import dev.mieser.tsa.signing.TspValidator;
+import dev.mieser.tsa.signing.*;
 import dev.mieser.tsa.signing.api.TimeStampAuthority;
 import dev.mieser.tsa.signing.api.TimeStampValidator;
 import dev.mieser.tsa.signing.cert.*;
+import dev.mieser.tsa.signing.config.mapper.BouncyCastleTsaPropertiesMapper;
 import dev.mieser.tsa.signing.mapper.TimeStampResponseMapper;
 import dev.mieser.tsa.signing.mapper.TimeStampValidationResultMapper;
 import dev.mieser.tsa.signing.serial.RandomSerialNumberGenerator;
 
 @Configuration
 @Import(DateTimeConfiguration.class)
-@EnableConfigurationProperties(TsaProperties.class)
+@EnableConfigurationProperties(TsaConfigurationProperties.class)
 public class TsaConfiguration {
 
     @Bean
-    TimeStampAuthority timeStampAuthority(TsaProperties tsaProperties, SigningCertificateLoader signingCertificateLoader,
-        CurrentDateTimeService currentDateTimeService, DateConverter dateConverter) {
+    BouncyCastleTsaProperties bouncyCastleTsaProperties(TsaConfigurationProperties tsaProperties) {
+        BouncyCastleTsaPropertiesMapper propertiesMapper = Mappers.getMapper(BouncyCastleTsaPropertiesMapper.class);
+        return propertiesMapper.map(tsaProperties);
+    }
+
+    @Bean
+    TimeStampAuthority timeStampAuthority(BouncyCastleTsaProperties tsaProperties,
+        SigningCertificateLoader signingCertificateLoader, CurrentDateTimeService currentDateTimeService,
+        DateConverter dateConverter) {
         return new BouncyCastleTimeStampAuthority(tsaProperties, tspParser(), tspValidator(),
             signingCertificateLoader, currentDateTimeService, new RandomSerialNumberGenerator(),
             new TimeStampResponseMapper(dateConverter),
@@ -61,20 +66,15 @@ public class TsaConfiguration {
     }
 
     @Bean
-    @ConditionalOnExpression("#{!('${tsa.certificate.path}' matches '^classpath:.*$')}")
-    SigningCertificateLoader fileSystemCertificateLoader(TsaProperties tsaProperties) {
+    SigningCertificateLoader fileSystemCertificateLoader(TsaConfigurationProperties tsaProperties) {
         char[] password = toCharArray(tsaProperties.getCertificate().getPassword());
 
-        return new FileSystemCertificateLoader(tsaProperties.getCertificate().getPath(), password);
-    }
-
-    @Bean
-    @ConditionalOnExpression("#{'${tsa.certificate.path}' matches '^classpath:.*$'}")
-    SigningCertificateLoader classPathSystemCertificateLoader(TsaProperties tsaProperties) {
-        char[] password = toCharArray(tsaProperties.getCertificate().getPassword());
-        String path = tsaProperties.getCertificate().getPath().replace("classpath:", "");
-
-        return new ClasspathCertificateLoader(path, password);
+        if (tsaProperties.getCertificate().getPath().startsWith("classpath:")) {
+            String path = tsaProperties.getCertificate().getPath().replace("classpath:", "");
+            return new ClasspathCertificateLoader(path, password);
+        } else {
+            return new FileSystemCertificateLoader(tsaProperties.getCertificate().getPath(), password);
+        }
     }
 
     private char[] toCharArray(String password) {

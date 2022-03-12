@@ -7,8 +7,6 @@ dependencies {
     api(project(":datetime"))
     api(project(":domain"))
 
-    implementation("org.springframework.boot:spring-boot")
-    implementation("org.springframework.boot:spring-boot-autoconfigure")
     implementation(libs.bouncycastle.bcpkix)
     implementation("jakarta.validation:jakarta.validation-api")
     implementation("commons-io:commons-io:2.11.0")
@@ -17,9 +15,10 @@ dependencies {
     testImplementation(project(":test-util"))
     testImplementation("org.apache.commons:commons-lang3")
     testImplementation("commons-codec:commons-codec")
+}
 
-    integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
-    integrationTestImplementation("org.hibernate.validator:hibernate-validator")
-
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+tasks.compileJava {
+    // ignore compiler warnings concerning exports to unknown modules
+    // suppressing all module warnings is not ideal, but there seems to be no better alternative
+    options.compilerArgs.add("-Xlint:-module")
 }

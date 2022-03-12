@@ -40,7 +40,6 @@ import dev.mieser.tsa.signing.api.exception.UnknownHashAlgorithmException;
 import dev.mieser.tsa.signing.cert.PublicKeyAlgorithm;
 import dev.mieser.tsa.signing.cert.PublicKeyAnalyzer;
 import dev.mieser.tsa.signing.cert.SigningCertificateLoader;
-import dev.mieser.tsa.signing.config.TsaProperties;
 import dev.mieser.tsa.signing.mapper.TimeStampResponseMapper;
 import dev.mieser.tsa.signing.serial.SerialNumberGenerator;
 
@@ -53,7 +52,7 @@ public class BouncyCastleTimeStampAuthority implements TimeStampAuthority {
 
     private static final Set<PublicKeyAlgorithm> SUPPORTED_PUBLIC_KEY_ALGORITHMS = EnumSet.of(DSA, RSA, EC);
 
-    private final TsaProperties tsaProperties;
+    private final BouncyCastleTsaProperties tsaProperties;
 
     private final TspParser tspParser;
 

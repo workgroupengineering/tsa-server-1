@@ -25,8 +25,8 @@ integrationTestRuntimeOnly.extendsFrom(configurations.testRuntimeOnly.get())
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:${libs.versions.spring.boot.get()}"))
-    annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:${libs.versions.spring.boot.get()}"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:${libs.versions.springBoot.get()}"))
+    annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:${libs.versions.springBoot.get()}"))
 
     implementation("org.slf4j:slf4j-api")
 

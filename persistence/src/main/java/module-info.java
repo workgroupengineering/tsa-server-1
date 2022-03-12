@@ -9,6 +9,10 @@ module tsa.persistence {
 
     requires spring.data.commons;
 
+    requires spring.context;
+
+    requires spring.boot.autoconfigure;
+
     requires org.mapstruct;
 
     requires org.apache.commons.codec;

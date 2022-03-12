@@ -49,7 +49,6 @@ import dev.mieser.tsa.signing.api.exception.UnknownHashAlgorithmException;
 import dev.mieser.tsa.signing.cert.PublicKeyAlgorithm;
 import dev.mieser.tsa.signing.cert.PublicKeyAnalyzer;
 import dev.mieser.tsa.signing.cert.SigningCertificateLoader;
-import dev.mieser.tsa.signing.config.TsaProperties;
 import dev.mieser.tsa.signing.mapper.TimeStampResponseMapper;
 import dev.mieser.tsa.signing.serial.SerialNumberGenerator;
 
@@ -91,7 +90,7 @@ class BouncyCastleTimeStampAuthorityTest {
         @Test
         void throwsExceptionWhenInitializationFails() throws IOException {
             // given
-            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new TsaProperties());
+            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new BouncyCastleTsaProperties());
 
             IOException cause = new IOException();
             when(signingCertificateLoaderMock.loadCertificate()).thenThrow(cause);
@@ -113,7 +112,7 @@ class BouncyCastleTimeStampAuthorityTest {
             given(signingCertificateLoaderMock.loadPrivateKey()).willReturn(privateKey);
             given(publicKeyAnalyzerMock.publicKeyAlgorithm(certificate)).willReturn(RSA);
 
-            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new TsaProperties());
+            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new BouncyCastleTsaProperties());
 
             // when / then
             assertThatCode(testSubject::initialize).doesNotThrowAnyException();
@@ -129,7 +128,7 @@ class BouncyCastleTimeStampAuthorityTest {
             given(signingCertificateLoaderMock.loadPrivateKey()).willReturn(privateKey);
             given(publicKeyAnalyzerMock.publicKeyAlgorithm(certificate)).willReturn(EC);
 
-            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new TsaProperties());
+            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new BouncyCastleTsaProperties());
 
             // when / then
             assertThatCode(testSubject::initialize).doesNotThrowAnyException();
@@ -145,7 +144,7 @@ class BouncyCastleTimeStampAuthorityTest {
             given(signingCertificateLoaderMock.loadPrivateKey()).willReturn(privateKey);
             given(publicKeyAnalyzerMock.publicKeyAlgorithm(certificate)).willReturn(DSA);
 
-            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new TsaProperties());
+            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new BouncyCastleTsaProperties());
 
             // when / then
             assertThatCode(testSubject::initialize).doesNotThrowAnyException();
@@ -161,7 +160,7 @@ class BouncyCastleTimeStampAuthorityTest {
             // given
             var tspRequestInputStream = new ByteArrayInputStream(new byte[0]);
 
-            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new TsaProperties());
+            BouncyCastleTimeStampAuthority testSubject = createTestSubject(new BouncyCastleTsaProperties());
 
             // when / then
             assertThatExceptionOfType(TsaNotInitializedException.class)
@@ -172,7 +171,7 @@ class BouncyCastleTimeStampAuthorityTest {
         void throwsExceptionWhenTsaDoesNotRecognizeHashAlgorithm(@Mock TimeStampRequest timeStampRequestMock) throws Exception {
             // given
             var tspRequestInputStream = new ByteArrayInputStream(new byte[0]);
-            var tsaProperties = new TsaProperties();
+            var tsaProperties = new BouncyCastleTsaProperties();
             tsaProperties.setEssCertIdAlgorithm(HashAlgorithm.SHA1);
             tsaProperties.setSigningDigestAlgorithm(SHA256);
 
@@ -198,7 +197,7 @@ class BouncyCastleTimeStampAuthorityTest {
             // given
             TimeStampRequest tspRequest = createSha256TimestampRequest();
             var tspRequestInputStream = new ByteArrayInputStream(tspRequest.getEncoded());
-            var tsaProperties = new TsaProperties();
+            var tsaProperties = new BouncyCastleTsaProperties();
             tsaProperties.setAcceptedHashAlgorithms(EnumSet.of(SHA512));
             TimeStampResponseData timeStampResponseData = TimeStampResponseData.builder().build();
             Date receptionTime = new Date();
@@ -227,7 +226,7 @@ class BouncyCastleTimeStampAuthorityTest {
             // given
             TimeStampRequest tspRequest = createSha256TimestampRequest();
             var tspRequestInputStream = new ByteArrayInputStream(tspRequest.getEncoded());
-            var tsaProperties = new TsaProperties();
+            var tsaProperties = new BouncyCastleTsaProperties();
             tsaProperties.setAcceptedHashAlgorithms(EnumSet.of(SHA512));
             Date receptionTime = new Date();
 
@@ -268,7 +267,8 @@ class BouncyCastleTimeStampAuthorityTest {
             given(currentDateTimeServiceMock.now()).willReturn(signingDate);
             given(serialNumberGeneratorMock.generateSerialNumber()).willReturn(10L);
 
-            BouncyCastleTimeStampAuthority testSubject = createInitializedTestSubject(new TsaProperties(), RSA, certificate,
+            BouncyCastleTimeStampAuthority testSubject = createInitializedTestSubject(new BouncyCastleTsaProperties(), RSA,
+                certificate,
                 privateKey);
 
             // when
@@ -287,7 +287,7 @@ class BouncyCastleTimeStampAuthorityTest {
             // given
             TimeStampRequest tspRequest = createSha256TimestampRequest();
             var tspRequestInputStream = new ByteArrayInputStream(tspRequest.getEncoded());
-            var tsaProperties = new TsaProperties();
+            var tsaProperties = new BouncyCastleTsaProperties();
             tsaProperties.setPolicyOid("1.2.3.4.5");
 
             X509Certificate certificate = loadRsaCertificate();
@@ -319,7 +319,7 @@ class BouncyCastleTimeStampAuthorityTest {
             // given
             TimeStampRequest tspRequest = createSha256TimestampRequest();
             var tspRequestInputStream = new ByteArrayInputStream(tspRequest.getEncoded());
-            var tsaProperties = new TsaProperties();
+            var tsaProperties = new BouncyCastleTsaProperties();
             tsaProperties.setPolicyOid("1.2.3.4.5");
 
             X509Certificate certificate = loadRsaCertificate();
@@ -362,7 +362,8 @@ class BouncyCastleTimeStampAuthorityTest {
             given(serialNumberGeneratorMock.generateSerialNumber()).willReturn(1L);
             given(currentDateTimeServiceMock.now()).willReturn(receptionTime);
 
-            BouncyCastleTimeStampAuthority testSubject = createInitializedTestSubject(new TsaProperties(), EC, certificate,
+            BouncyCastleTimeStampAuthority testSubject = createInitializedTestSubject(new BouncyCastleTsaProperties(), EC,
+                certificate,
                 privateKey);
 
             // when
@@ -391,7 +392,8 @@ class BouncyCastleTimeStampAuthorityTest {
             given(serialNumberGeneratorMock.generateSerialNumber()).willReturn(1L);
             given(currentDateTimeServiceMock.now()).willReturn(receptionTime);
 
-            BouncyCastleTimeStampAuthority testSubject = createInitializedTestSubject(new TsaProperties(), EC, certificate,
+            BouncyCastleTimeStampAuthority testSubject = createInitializedTestSubject(new BouncyCastleTsaProperties(), EC,
+                certificate,
                 privateKey);
 
             // when
@@ -408,12 +410,12 @@ class BouncyCastleTimeStampAuthorityTest {
 
     }
 
-    private BouncyCastleTimeStampAuthority createTestSubject(TsaProperties tsaProperties) {
+    private BouncyCastleTimeStampAuthority createTestSubject(BouncyCastleTsaProperties tsaProperties) {
         return new BouncyCastleTimeStampAuthority(tsaProperties, tspParserMock, tspValidatorMock, signingCertificateLoaderMock,
             currentDateTimeServiceMock, serialNumberGeneratorMock, timeStampResponseMapperMock, publicKeyAnalyzerMock);
     }
 
-    private BouncyCastleTimeStampAuthority createInitializedTestSubject(TsaProperties tsaProperties,
+    private BouncyCastleTimeStampAuthority createInitializedTestSubject(BouncyCastleTsaProperties tsaProperties,
         PublicKeyAlgorithm publicKeyAlgorithm,
         X509Certificate x509Certificate, PrivateKey privateKey) throws IOException {
         given(signingCertificateLoaderMock.loadCertificate()).willReturn(x509Certificate);

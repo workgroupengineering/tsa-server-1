@@ -1,11 +1,11 @@
-module tsa.currenttime {
-    requires static lombok;
+module tsa.datetime {
 
-    requires spring.context;
+    requires static lombok;
 
     exports dev.mieser.tsa.datetime.api;
 
-    exports dev.mieser.tsa.datetime.config;
+    // API implementation details only required in config and embedded module
 
-    opens dev.mieser.tsa.datetime.config;
+    exports dev.mieser.tsa.datetime to tsa.datetime.config, tsa.embedded;
+
 }

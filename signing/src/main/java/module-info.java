@@ -1,11 +1,6 @@
 module tsa.signing {
+
     requires java.validation;
-
-    requires spring.boot;
-
-    requires spring.context;
-
-    requires spring.boot.autoconfigure;
 
     requires org.bouncycastle.pkix;
 
@@ -19,9 +14,9 @@ module tsa.signing {
 
     requires org.slf4j;
 
-    requires tsa.currenttime;
+    requires transitive tsa.datetime;
 
-    requires tsa.domain;
+    requires transitive tsa.domain;
 
     requires static lombok;
 
@@ -29,7 +24,14 @@ module tsa.signing {
 
     exports dev.mieser.tsa.signing.api.exception;
 
-    exports dev.mieser.tsa.signing.config;
+    // API implementation details only required in the config and embedded module
 
-    opens dev.mieser.tsa.signing.config;
+    exports dev.mieser.tsa.signing to tsa.signing.config, tsa.embedded;
+
+    exports dev.mieser.tsa.signing.cert to tsa.signing.config, tsa.embedded;
+
+    exports dev.mieser.tsa.signing.mapper to tsa.signing.config, tsa.embedded;
+
+    exports dev.mieser.tsa.signing.serial to tsa.signing.config, tsa.embedded;
+
 }

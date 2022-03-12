@@ -1,11 +1,13 @@
 [versions]
-spring-boot = "2.6.3"
-tomcat = "9.0.56"
+springBoot = "2.6.4"
+tomcat = "9.0.58"
 jacoco = "0.8.7"
 spotless = "6.1.0"
+mapstruct = "1.4.2.Final"
+grizzly = "3.0.1"
 
 [libraries]
 bouncycastle-bcpkix = { module = "org.bouncycastle:bcpkix-jdk15on", version = "1.70" }
 
 [plugins]
-spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }

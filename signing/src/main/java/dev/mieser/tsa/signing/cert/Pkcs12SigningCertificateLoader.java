@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,8 +54,10 @@ abstract class Pkcs12SigningCertificateLoader implements SigningCertificateLoade
         }
 
         KeyStore keyStore = loadKeystore();
-        this.certificate = extractCertificate(keyStore);
-        this.privateKey = extractPrivateKey(keyStore);
+        certificate = Objects.requireNonNull(extractCertificate(keyStore),
+            "Certificate cannot be extracted from PKCS#12 keystore.");
+        privateKey = Objects.requireNonNull(extractPrivateKey(keyStore),
+            "Private key cannot be extracted from PKCS#12 keystore.");
     }
 
     private KeyStore loadKeystore() throws IOException {

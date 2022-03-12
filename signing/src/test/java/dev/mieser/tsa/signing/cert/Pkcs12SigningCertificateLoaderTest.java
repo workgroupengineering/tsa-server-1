@@ -1,7 +1,6 @@
 package dev.mieser.tsa.signing.cert;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -86,6 +85,17 @@ class Pkcs12SigningCertificateLoaderTest {
         assertThatIllegalStateException()
             .isThrownBy(testSubject::loadCertificate)
             .withMessage("PKCS#12 key store not found at '/unknown-file.p12'.");
+    }
+
+    @Test
+    void loadCertificateThrowsExceptionWhenCertificateCannotBeExtracted() {
+        // given
+        Pkcs12SigningCertificateLoader testSubject = new Pkcs12SigningCertificateLoaderImpl("unprotected.p12", null);
+
+        // when / then
+        assertThatNullPointerException()
+            .isThrownBy(testSubject::loadCertificate)
+            .withMessage("Certificate cannot be extracted from PKCS#12 keystore.");
     }
 
     private PrivateKey loadPrivateKey() throws Exception {

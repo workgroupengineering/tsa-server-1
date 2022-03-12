@@ -13,6 +13,8 @@ module tsa.integration {
 
     requires tsa.signing;
 
+    requires tsa.signing.config;
+
     requires tsa.persistence;
 
     requires static lombok;
