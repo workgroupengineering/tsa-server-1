@@ -1,6 +1,8 @@
 plugins {
     `java-convention`
     `spotless-config`
+    // TODO: move to convention plugin after complete migration
+    kotlin("kapt")
 }
 
 val webResource by configurations.creating
@@ -60,7 +62,8 @@ dependencies {
         exclude("org.webjars", "jquery")
     }
 
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    // TODO: remove version after spring boot BOM is set as platform, set 'kapt.include.compile.classpath=false'
+    kapt("org.springframework.boot:spring-boot-configuration-processor:${libs.versions.spring.boot.get()}")
 }
 
 val generateApplicationVersionFile by tasks.registering {

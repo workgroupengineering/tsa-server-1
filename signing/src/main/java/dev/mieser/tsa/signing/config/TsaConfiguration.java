@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import dev.mieser.tsa.datetime.api.CurrentDateTimeService;
+import dev.mieser.tsa.datetime.api.CurrentDateService;
 import dev.mieser.tsa.datetime.api.DateConverter;
 import dev.mieser.tsa.datetime.config.DateTimeConfiguration;
 import dev.mieser.tsa.signing.BouncyCastleTimeStampAuthority;
@@ -27,9 +27,9 @@ public class TsaConfiguration {
 
     @Bean
     TimeStampAuthority timeStampAuthority(TsaProperties tsaProperties, SigningCertificateLoader signingCertificateLoader,
-        CurrentDateTimeService currentDateTimeService, DateConverter dateConverter) {
+        CurrentDateService currentDateService, DateConverter dateConverter) {
         return new BouncyCastleTimeStampAuthority(tsaProperties, tspParser(), tspValidator(),
-            signingCertificateLoader, currentDateTimeService, new RandomSerialNumberGenerator(),
+            signingCertificateLoader, currentDateService, new RandomSerialNumberGenerator(),
             new TimeStampResponseMapper(dateConverter),
             publicKeyAnalyzer());
     }

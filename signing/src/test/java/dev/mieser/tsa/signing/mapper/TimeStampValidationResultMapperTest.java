@@ -3,7 +3,7 @@ package dev.mieser.tsa.signing.mapper;
 import static dev.mieser.tsa.domain.FailureInfo.BAD_ALGORITHM;
 import static dev.mieser.tsa.domain.HashAlgorithm.SHA512;
 import static dev.mieser.tsa.domain.ResponseStatus.*;
-import static dev.mieser.tsa.testutil.TestCertificateLoader.loadEcCertificate;
+import static dev.mieser.tsa.testutil.TestCertificateLoader.getEcCertificate;
 import static dev.mieser.tsa.testutil.TimeStampResponseGenerator.generateTimeStampResponseMock;
 import static java.math.BigInteger.TWO;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -158,7 +158,7 @@ class TimeStampValidationResultMapperTest {
     @Test
     void mapsSigningCertificateInformation() throws Exception {
         // given
-        X509Certificate certificate = loadEcCertificate();
+        X509Certificate certificate = getEcCertificate();
         X509CertificateHolder certificateHolder = new X509CertificateHolder(certificate.getEncoded());
         ZonedDateTime mappedExpirationDate = ZonedDateTime.parse("2030-12-27T12:00:00+01:00");
         SigningCertificateHolder signingCertificateHolder = new SigningCertificateHolder(new AlgorithmIdentifier(id_SHA1),

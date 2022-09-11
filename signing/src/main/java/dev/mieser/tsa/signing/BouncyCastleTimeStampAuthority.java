@@ -29,7 +29,7 @@ import org.bouncycastle.tsp.*;
 import org.bouncycastle.util.CollectionStore;
 import org.bouncycastle.util.Store;
 
-import dev.mieser.tsa.datetime.api.CurrentDateTimeService;
+import dev.mieser.tsa.datetime.api.CurrentDateService;
 import dev.mieser.tsa.domain.HashAlgorithm;
 import dev.mieser.tsa.domain.TimeStampResponseData;
 import dev.mieser.tsa.signing.api.TimeStampAuthority;
@@ -61,7 +61,7 @@ public class BouncyCastleTimeStampAuthority implements TimeStampAuthority {
 
     private final SigningCertificateLoader signingCertificateLoader;
 
-    private final CurrentDateTimeService currentDateTimeService;
+    private final CurrentDateService currentDateService;
 
     private final SerialNumberGenerator serialNumberGenerator;
 
@@ -99,7 +99,7 @@ public class BouncyCastleTimeStampAuthority implements TimeStampAuthority {
     private TimeStampResponseData generateTspResponse(TimeStampRequest timeStampRequest) {
         try {
             BigInteger tspResponseSerial = BigInteger.valueOf(serialNumberGenerator.generateSerialNumber());
-            Date receptionTime = currentDateTimeService.now();
+            Date receptionTime = currentDateService.now();
             TimeStampResponse tspResponse = timeStampResponseGenerator.generate(timeStampRequest, tspResponseSerial,
                 receptionTime);
             log.info("Successfully signed TSP request. TSP request serial number: {}", tspResponseSerial);

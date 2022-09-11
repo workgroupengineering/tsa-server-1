@@ -2,7 +2,7 @@ package dev.mieser.tsa.signing.cert;
 
 import static dev.mieser.tsa.domain.HashAlgorithm.SHA256;
 import static dev.mieser.tsa.domain.ResponseStatus.GRANTED;
-import static dev.mieser.tsa.testutil.TestCertificateLoader.loadRsaCertificate;
+import static dev.mieser.tsa.testutil.TestCertificateLoader.getRsaCertificate;
 import static dev.mieser.tsa.testutil.TimeStampResponseGenerator.generateTimeStampResponseMock;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.repeat;
@@ -66,7 +66,7 @@ class SigningCertificateExtractorTest {
             .genTime(new Date())
             .hashAlgorithm(SHA256)
             .hash(repeat("b", 32).getBytes(UTF_8))
-            .signingCertificate(loadRsaCertificate())
+            .signingCertificate(getRsaCertificate())
             .build();
 
         TimeStampResponse timeStampResponseMock = generateTimeStampResponseMock(responseProperties);
@@ -98,7 +98,7 @@ class SigningCertificateExtractorTest {
                 .genTime(new Date())
                 .hashAlgorithm(SHA256)
                 .hash(repeat("b", 32).getBytes(UTF_8))
-                .signingCertificate(loadRsaCertificate())
+                .signingCertificate(getRsaCertificate())
                 .signedAttributes(signedAttributeTable)
                 .build();
 
@@ -125,7 +125,7 @@ class SigningCertificateExtractorTest {
                 .genTime(new Date())
                 .hashAlgorithm(SHA256)
                 .hash(repeat("b", 32).getBytes(UTF_8))
-                .signingCertificate(loadRsaCertificate())
+                .signingCertificate(getRsaCertificate())
                 .signedAttributes(signedAttributeTable)
                 .build();
 
@@ -173,7 +173,7 @@ class SigningCertificateExtractorTest {
         @Test
         void returnsSigningCertificateWhenPresent() throws Exception {
             // given
-            X509Certificate certificate = loadRsaCertificate();
+            X509Certificate certificate = getRsaCertificate();
             byte[] encodedCertificate = certificate.getEncoded();
             byte[] sha1CertificateHash = MessageDigest.getInstance("SHA1").digest(encodedCertificate);
 
@@ -228,7 +228,7 @@ class SigningCertificateExtractorTest {
                 .genTime(new Date())
                 .hashAlgorithm(SHA256)
                 .hash(repeat("b", 32).getBytes(UTF_8))
-                .signingCertificate(loadRsaCertificate())
+                .signingCertificate(getRsaCertificate())
                 .signedAttributes(signedAttributeTable)
                 .build();
 
@@ -255,7 +255,7 @@ class SigningCertificateExtractorTest {
                 .genTime(new Date())
                 .hashAlgorithm(SHA256)
                 .hash(repeat("b", 32).getBytes(UTF_8))
-                .signingCertificate(loadRsaCertificate())
+                .signingCertificate(getRsaCertificate())
                 .signedAttributes(signedAttributeTable)
                 .build();
 
@@ -303,7 +303,7 @@ class SigningCertificateExtractorTest {
         @Test
         void returnsSigningCertificateWithMatchingSha256HashWhenHashAlgorithmNotSpecified() throws Exception {
             // given
-            X509Certificate certificate = loadRsaCertificate();
+            X509Certificate certificate = getRsaCertificate();
             byte[] encodedCertificate = certificate.getEncoded();
             byte[] sha256CertificateHash = MessageDigest.getInstance("SHA256").digest(encodedCertificate);
 
@@ -339,7 +339,7 @@ class SigningCertificateExtractorTest {
         @Test
         void returnsSigningCertificateWithSpecifiedHashAlgorithm() throws Exception {
             // given
-            X509Certificate certificate = loadRsaCertificate();
+            X509Certificate certificate = getRsaCertificate();
             byte[] encodedCertificate = certificate.getEncoded();
             byte[] sha1CertificateHash = MessageDigest.getInstance("SHA1").digest(encodedCertificate);
 

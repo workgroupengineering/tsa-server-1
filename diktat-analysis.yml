@@ -1,0 +1,25 @@
+# Checks that on file level internal or public class or function has missing KDoc
+- name: MISSING_KDOC_TOP_LEVEL
+  enabled: false
+# Checks trailing comma
+- name: TRAILING_COMMA
+  enabled: true
+  configuration:
+    # VALUE_ARGUMENT
+    valueArgument: false
+    # VALUE_PARAMETER
+    valueParameter: false
+    # REFERENCE_EXPRESSION
+    indices: false
+    # WHEN_CONDITION_WITH_EXPRESSION
+    whenConditions: false
+    # STRING_TEMPLATE
+    collectionLiteral: false
+    # TYPE_PROJECTION
+    typeArgument: false
+    # TYPE_PARAMETER
+    typeParameter: false
+    # DESTRUCTURING_DECLARATION_ENTRY
+    destructuringDeclaration: false
+- name: KDOC_NO_EMPTY_TAGS
+  enabled: false

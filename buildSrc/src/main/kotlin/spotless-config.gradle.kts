@@ -3,6 +3,10 @@ plugins {
 }
 
 spotless {
+    kotlin {
+        diktat().configFile("$rootDir/diktat-analysis.yml")
+    }
+
     java {
         importOrderFile("$rootDir/spotless.importorder")
         removeUnusedImports()

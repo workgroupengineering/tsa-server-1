@@ -3,7 +3,6 @@ package dev.mieser.tsa.testutil;
 import static dev.mieser.tsa.domain.FailureInfo.BAD_ALGORITHM;
 import static dev.mieser.tsa.domain.HashAlgorithm.SHA256;
 import static dev.mieser.tsa.domain.ResponseStatus.*;
-import static dev.mieser.tsa.testutil.TestCertificateLoader.loadRsaCertificate;
 import static dev.mieser.tsa.testutil.TimeStampResponseGenerator.generateTimeStampResponseMock;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.repeat;
@@ -104,7 +103,7 @@ class TimeStampResponseGeneratorTest {
     @Test
     void generatesExpectedResponseWithTokenContainingCertificate() throws Exception {
         // given
-        X509Certificate signingCertificate = loadRsaCertificate();
+        X509Certificate signingCertificate = TestCertificateLoader.getEcCertificate();
 
         ResponseProperties grantedResponseProperties = ResponseProperties.builder()
             .status(GRANTED_WITH_MODS)

@@ -116,7 +116,7 @@ class BouncyCastleTimeStampValidatorTest {
             then(timeStampTokenMock).should().validate(signerInformationCaptor.capture());
 
             assertThat(signerInformationCaptor.getValue().getAssociatedCertificate().getEncoded())
-                .isEqualTo(loadEcCertificate().getEncoded());
+                .isEqualTo(getEcCertificate().getEncoded());
         }
 
         @Test
@@ -196,7 +196,7 @@ class BouncyCastleTimeStampValidatorTest {
         @Test
         void initializeAcceptsRsaCertificates() throws IOException {
             // given
-            X509Certificate rsaCertificate = loadRsaCertificate();
+            X509Certificate rsaCertificate = getRsaCertificate();
 
             given(signingCertificateLoaderMock.loadCertificate()).willReturn(rsaCertificate);
             given(publicKeyAnalyzerMock.publicKeyAlgorithm(rsaCertificate)).willReturn(RSA);
@@ -210,7 +210,7 @@ class BouncyCastleTimeStampValidatorTest {
         @Test
         void initializeAcceptsEcCertificates() throws IOException {
             // given
-            X509Certificate ecCertificate = loadEcCertificate();
+            X509Certificate ecCertificate = getEcCertificate();
 
             given(signingCertificateLoaderMock.loadCertificate()).willReturn(ecCertificate);
             given(publicKeyAnalyzerMock.publicKeyAlgorithm(ecCertificate)).willReturn(EC);
@@ -224,7 +224,7 @@ class BouncyCastleTimeStampValidatorTest {
         @Test
         void initializeAcceptsDsaCertificates() throws IOException {
             // given
-            X509Certificate dsaCertificate = loadDsaCertificate();
+            X509Certificate dsaCertificate = getDsaCertificate();
 
             given(signingCertificateLoaderMock.loadCertificate()).willReturn(dsaCertificate);
             given(publicKeyAnalyzerMock.publicKeyAlgorithm(dsaCertificate)).willReturn(DSA);
@@ -245,7 +245,7 @@ class BouncyCastleTimeStampValidatorTest {
 
     private BouncyCastleTimeStampValidator createInitializedTestSubject() throws IOException {
         BouncyCastleTimeStampValidator testSubject = createUninitializedTestSubject();
-        X509Certificate ecCertificate = loadEcCertificate();
+        X509Certificate ecCertificate = getEcCertificate();
 
         given(signingCertificateLoaderMock.loadCertificate()).willReturn(ecCertificate);
         given(publicKeyAnalyzerMock.publicKeyAlgorithm(ecCertificate)).willReturn(EC);

@@ -21,12 +21,12 @@ class TestCertificateLoaderTest {
 
     static Stream<Arguments> methodsToInvoke() {
         return Stream.of(
-            arguments((ThrowingSupplier<Object>) TestCertificateLoader::loadRsaCertificate),
-            arguments((ThrowingSupplier<Object>) TestCertificateLoader::loadRsaCertificate),
-            arguments((ThrowingSupplier<Object>) TestCertificateLoader::loadDsaCertificate),
-            arguments((ThrowingSupplier<Object>) TestCertificateLoader::loadDsaPrivateKey),
-            arguments((ThrowingSupplier<Object>) TestCertificateLoader::loadEcCertificate),
-            arguments((ThrowingSupplier<Object>) TestCertificateLoader::loadEcPrivateKey));
+            arguments((ThrowingSupplier<Object>) TestCertificateLoader::getRsaCertificate),
+            arguments((ThrowingSupplier<Object>) TestCertificateLoader::getRsaPrivateKey),
+            arguments((ThrowingSupplier<Object>) TestCertificateLoader::getDsaCertificate),
+            arguments((ThrowingSupplier<Object>) TestCertificateLoader::getDsaPrivateKey),
+            arguments((ThrowingSupplier<Object>) TestCertificateLoader::getEcCertificate),
+            arguments((ThrowingSupplier<Object>) TestCertificateLoader::getEcPrivateKey));
     }
 
 }

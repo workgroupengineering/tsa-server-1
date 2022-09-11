@@ -1,4 +1,6 @@
 [versions]
+kotlin = "1.7.10"
+
 spring-boot = "2.7.2"
 tomcat = "9.0.65"
 jacoco = "0.8.8"

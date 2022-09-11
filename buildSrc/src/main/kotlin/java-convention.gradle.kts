@@ -1,6 +1,8 @@
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    kotlin("jvm")
     `java-library`
     jacoco
 }
@@ -58,6 +60,10 @@ tasks.withType<Test>().configureEach {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = "17"
 }
 
 tasks.check {

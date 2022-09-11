@@ -1,6 +1,7 @@
 package dev.mieser.tsa.app.test;
 
 import static io.restassured.RestAssured.given;
+import static java.util.Collections.emptyList;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -41,13 +42,8 @@ public class HistoryRestControllerIntegrationTest {
     @Test
     void returnsResponseHistoryInExpectedOrder() throws Exception {
         // given
-        DatatablesPagingRequest pagingRequest = DatatablesPagingRequest.builder()
-            .draw(1)
-            .length(100)
-            .start(0)
-            .columns(List.of(new Column("serialNumber", "serialNumber")))
-            .order(List.of(new Order(0, SortDirection.DESC)))
-            .build();
+        DatatablesPagingRequest pagingRequest = new DatatablesPagingRequest(1, 0, 100, List.of(new Order(0, SortDirection.DESC)),
+            List.of(new Column("serialNumber", "serialNumber")));
 
         // when / then
         given()
@@ -67,12 +63,8 @@ public class HistoryRestControllerIntegrationTest {
     @Test
     void returnsResponseHistoryWithExpectedPage() throws Exception {
         // given
-        DatatablesPagingRequest pagingRequest = DatatablesPagingRequest.builder()
-            .draw(1337)
-            .length(1)
-            .start(2)
-            .columns(List.of(new Column("id", "id")))
-            .build();
+        DatatablesPagingRequest pagingRequest = new DatatablesPagingRequest(1337, 2, 1, emptyList(),
+            List.of(new Column("id", "id")));
 
         // when / then
         given()
@@ -94,11 +86,8 @@ public class HistoryRestControllerIntegrationTest {
     @Test
     void serialNumbersAreRepresentedAsUppercaseHexStrings() throws Exception {
         // given
-        DatatablesPagingRequest pagingRequest = DatatablesPagingRequest.builder()
-            .length(1)
-            .columns(List.of(new Column("id", "id")))
-            .order(List.of(new Order(0, SortDirection.ASC)))
-            .build();
+        DatatablesPagingRequest pagingRequest = new DatatablesPagingRequest(0, 0, 1, List.of(new Order(0, SortDirection.ASC)),
+            List.of(new Column("id", "id")));
 
         // when / then
         given()
