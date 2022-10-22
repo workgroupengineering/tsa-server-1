@@ -33,7 +33,7 @@ module tsa.web {
 
     requires com.fasterxml.jackson.datatype.jsr310;
 
-    requires tsa.signing;
+    requires tsa.signing.impl;
 
     requires tsa.integration;
 

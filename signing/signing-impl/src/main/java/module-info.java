@@ -1,0 +1,33 @@
+module tsa.signing.impl {
+    requires java.validation;
+
+    requires spring.boot;
+
+    requires spring.context;
+
+    requires spring.boot.autoconfigure;
+
+    requires org.bouncycastle.pkix;
+
+    requires org.bouncycastle.util;
+
+    requires org.bouncycastle.provider;
+
+    requires org.apache.commons.codec;
+
+    requires org.apache.commons.io;
+
+    requires org.apache.commons.lang3;
+
+    requires org.slf4j;
+
+    requires tsa.datetime.api;
+
+    requires tsa.signing.api;
+
+    requires static lombok;
+
+    exports dev.mieser.tsa.signing.config;
+
+    opens dev.mieser.tsa.signing.config;
+}

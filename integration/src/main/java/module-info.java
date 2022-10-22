@@ -11,7 +11,7 @@ module tsa.integration {
 
     requires tsa.domain;
 
-    requires tsa.signing;
+    requires tsa.signing.api;
 
     requires tsa.persistence;
 

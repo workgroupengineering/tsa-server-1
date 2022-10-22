@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     api(project(":domain"))
-    api(project(":signing"))
+    api(project(":signing:signing-api"))
 
     implementation(project(":persistence"))
 

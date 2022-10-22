@@ -15,7 +15,7 @@ module tsa.persistence {
 
     requires tsa.domain;
 
-    requires tsa.signing;
+    requires tsa.signing.impl;
 
     requires static lombok;
 

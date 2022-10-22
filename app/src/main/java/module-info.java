@@ -9,7 +9,7 @@ module tsa.app {
 
     requires spring.boot.autoconfigure;
 
-    requires tsa.signing;
+    requires tsa.signing.impl;
 
     requires static lombok;
 
