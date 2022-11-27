@@ -13,7 +13,7 @@ import dev.mieser.tsa.web.formatter.Base64Formatter;
 import dev.mieser.tsa.web.formatter.HexFormatter;
 
 @Configuration
-class CustomWebMvcConfiguration implements WebMvcConfigurer {
+public class CustomWebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {

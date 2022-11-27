@@ -1,4 +1,5 @@
-module tsa.app {
+// currently not in use because of major problems with JPMS in native executables
+open module tsa.app {
     requires spring.core;
 
     requires spring.boot;
@@ -11,7 +12,7 @@ module tsa.app {
 
     requires tsa.signing;
 
-    requires static lombok;
+    requires tsa.web;
 
-    opens dev.mieser.tsa.app;
+    requires static lombok;
 }

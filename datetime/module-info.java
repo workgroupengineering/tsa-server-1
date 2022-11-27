@@ -1,4 +1,5 @@
-module tsa.currenttime {
+// currently not in use because of major problems with JPMS in native executables
+open module tsa.currenttime {
     requires static lombok;
 
     requires spring.context;
@@ -6,6 +7,4 @@ module tsa.currenttime {
     exports dev.mieser.tsa.datetime.api;
 
     exports dev.mieser.tsa.datetime.config;
-
-    opens dev.mieser.tsa.datetime.config;
 }

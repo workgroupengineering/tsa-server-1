@@ -1,0 +1,3 @@
+# custom application context initializers for registering the random TSA port in the environment
+org.springframework.context.ApplicationContextInitializer=\
+  dev.mieser.tsa.app.test.TsaPortInfoApplicationContextInitializer

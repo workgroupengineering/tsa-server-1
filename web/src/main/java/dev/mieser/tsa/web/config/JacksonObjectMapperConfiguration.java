@@ -9,7 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.mieser.tsa.web.formatter.HexJsonSerializer;
 
 @Configuration
-class JacksonObjectMapperConfiguration implements Jackson2ObjectMapperBuilderCustomizer {
+public class JacksonObjectMapperConfiguration implements Jackson2ObjectMapperBuilderCustomizer {
 
     @Override
     public void customize(Jackson2ObjectMapperBuilder jacksonObjectMapperBuilder) {

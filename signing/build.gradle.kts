@@ -17,9 +17,8 @@ dependencies {
 
     testImplementation(project(":test-util"))
     testImplementation("org.apache.commons:commons-lang3")
-
-    integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
-    integrationTestImplementation("org.hibernate.validator:hibernate-validator")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-validation")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }

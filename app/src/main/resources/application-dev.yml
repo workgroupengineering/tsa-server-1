@@ -7,3 +7,7 @@ spring:
 tsa:
   certificate:
     path: "classpath:dev/mieser/tsa/app/rsa.p12"
+  http:
+    port: 8079
+  server:
+    port: 3018

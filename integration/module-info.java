@@ -1,4 +1,5 @@
-module tsa.integration {
+// currently not in use because of major problems with JPMS in native executables
+open module tsa.integration {
     requires spring.context;
 
     requires spring.beans;
@@ -20,6 +21,4 @@ module tsa.integration {
     exports dev.mieser.tsa.integration.api;
 
     exports dev.mieser.tsa.integration.config;
-
-    opens dev.mieser.tsa.integration.config;
 }

@@ -23,7 +23,7 @@ import dev.mieser.tsa.web.config.properties.HttpsRedirectProperties;
 @RequiredArgsConstructor
 @EnableConfigurationProperties(HttpsRedirectProperties.class)
 @ConditionalOnProperty(name = "server.ssl.key-store")
-class HttpsRedirectConfiguration implements WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
+public class HttpsRedirectConfiguration implements WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
 
     /**
      * The default Spring server port when the {@code server.port} property is not set explicitly.

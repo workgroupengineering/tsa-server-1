@@ -14,7 +14,7 @@ dependencies {
     implementation("commons-codec:commons-codec")
     implementation("org.flywaydb:flyway-core")
 
-    integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     annotationProcessor("org.mapstruct:mapstruct-processor:${libs.versions.mapstruct.get()}")
 

@@ -1,6 +1,5 @@
 package dev.mieser.tsa.persistence.config;
 
-import org.mapstruct.factory.Mappers;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +9,7 @@ import dev.mieser.tsa.persistence.TspResponseDataRepositoryImpl;
 import dev.mieser.tsa.persistence.TspResponseEntityRepository;
 import dev.mieser.tsa.persistence.api.TspResponseDataRepository;
 import dev.mieser.tsa.persistence.mapper.TspResponseMapper;
+import dev.mieser.tsa.persistence.mapper.TspResponseMapperImpl;
 
 @Configuration
 @EntityScan(basePackageClasses = TspResponseEntityRepository.class)
@@ -23,7 +23,7 @@ public class PersistenceConfiguration {
 
     @Bean
     TspResponseMapper tspResponseMapper() {
-        return Mappers.getMapper(TspResponseMapper.class);
+        return new TspResponseMapperImpl();
     }
 
 }

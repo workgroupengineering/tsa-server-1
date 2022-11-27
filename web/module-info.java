@@ -1,4 +1,5 @@
-module tsa.web {
+// currently not in use because of major problems with JPMS in native executables
+open module tsa.web {
     requires spring.boot;
 
     requires spring.context;
@@ -13,11 +14,9 @@ module tsa.web {
 
     requires spring.boot.autoconfigure;
 
-    requires org.apache.tomcat.catalina;
+    requires org.apache.tomcat.embed.core;
 
     requires org.slf4j;
-
-    requires jakarta.servlet;
 
     requires jakarta.validation;
 
@@ -41,5 +40,7 @@ module tsa.web {
 
     requires static lombok;
 
-    opens dev.mieser.tsa.web.config;
+    exports dev.mieser.tsa.web.config;
+
+    exports dev.mieser.tsa.web.config.properties;
 }

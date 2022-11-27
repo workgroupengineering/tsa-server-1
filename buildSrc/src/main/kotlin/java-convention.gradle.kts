@@ -13,12 +13,6 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
-val integrationTestImplementation by configurations.creating
-val integrationTestRuntimeOnly by configurations.creating
-
-integrationTestImplementation.extendsFrom(configurations.testImplementation.get())
-integrationTestRuntimeOnly.extendsFrom(configurations.testRuntimeOnly.get())
-
 // Workaround for using version catalogs in precompiled script plugins.
 // See https://github.com/gradle/gradle/issues/15383#issuecomment-779893192
 val libs = the<LibrariesForLibs>()
@@ -32,24 +26,9 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.assertj:assertj-core")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-
     testImplementation("org.mockito:mockito-junit-jupiter")
-}
-
-val integrationTestSourceSet = sourceSets.create("integrationTest") {
-    compileClasspath += sourceSets.main.get().output
-    runtimeClasspath += sourceSets.main.get().output
-}
-
-val integrationTest by tasks.registering(Test::class) {
-    group = "verification"
-
-    testClassesDirs = integrationTestSourceSet.output.classesDirs
-    classpath = integrationTestSourceSet.runtimeClasspath
-    shouldRunAfter(tasks.test)
 }
 
 tasks.withType<Test>().configureEach {
@@ -58,10 +37,11 @@ tasks.withType<Test>().configureEach {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+    // required for GraalVM AOT processing
+    options.compilerArgs.add("-parameters")
 }
 
-tasks.check {
-    dependsOn(integrationTest)
+tasks.check.configure {
     finalizedBy(tasks.jacocoTestReport)
 }
 

@@ -1,4 +1,5 @@
-module tsa.signing {
+// currently not in use because of major problems with JPMS in native executables
+open module tsa.signing {
     requires jakarta.validation;
 
     requires spring.boot;
@@ -34,6 +35,4 @@ module tsa.signing {
     exports dev.mieser.tsa.signing.api.exception;
 
     exports dev.mieser.tsa.signing.config;
-
-    opens dev.mieser.tsa.signing.config;
 }
