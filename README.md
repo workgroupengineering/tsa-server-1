@@ -17,6 +17,10 @@ volume to the `/work/data` will make the DB data persistent.
 The keystore containing the certificate and private key used to sign the requests with is loaded
 from `/work/keystore.p12` by default.
 
+There are two Docker Image variants: _Native_ and _JVM_.
+Native Images (e.g. `dnl50/tsa-server:3.1.0`) are only available for `x86-64`. The JVM variant
+(e.g. `dnl50/tsa-server:3.1.0-jvm`) is available for `x86-64` and `arm64`.
+
 ## Features
 
 ### Time Stamping

@@ -84,9 +84,14 @@ spotless {
 
 quarkus {
     set("native.container-build", "true")
-    set("container-image.build", "true")
     set("container-image.group", "dnl50")
     set("container-image.name", "tsa-server")
-    set("package.type", "native")
+    set("container-image.tag", objects.property<String>().value(provider {
+        if (project.hasProperty("imageTagSuffix")) {
+            "${project.version}-${project.property("imageTagSuffix")}"
+        } else {
+            project.version.toString()
+        }
+    }))
     finalName.set("tsa-${project.version}")
 }
