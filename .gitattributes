@@ -5,3 +5,9 @@
 *.bat           text eol=crlf
 * text eol=lf
 
+*.html          text diff=html
+*.java          text diff=java
+*.css           text diff=css
+
+*.jar           binary
+*.png           binary

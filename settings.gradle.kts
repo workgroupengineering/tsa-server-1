@@ -6,11 +6,11 @@ include("web")
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            version("quarkus", "3.7.0")
+            version("quarkus", "3.9.1")
             version("mapstruct", "1.5.5.Final")
 
             plugin("quarkus", "io.quarkus").versionRef("quarkus")
-            plugin("lombok", "io.freefair.lombok").version("8.4")
+            plugin("lombok", "io.freefair.lombok").version("8.6")
             plugin("spotless", "com.diffplug.spotless").version("6.25.0")
 
             library("quarkus-bom", "io.quarkus", "quarkus-bom").versionRef("quarkus")
@@ -20,7 +20,7 @@ dependencyResolutionManagement {
         }
 
         create("testLibs") {
-            library("assertj", "org.assertj:assertj-core:3.25.2")
+            library("assertj", "org.assertj:assertj-core:3.25.3")
             library("archunit", "com.tngtech.archunit:archunit:1.2.1")
         }
     }
