@@ -61,9 +61,11 @@ tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-parameters")
 }
 
+// this file is used in the publish-workflow as well
 val openApiSpecificationFile = layout.buildDirectory.file("openapi-specification.json")
 
 tasks.test {
+    inputs.property("project-version", provider { project.version })
     outputs.file(openApiSpecificationFile)
     systemProperty("openapi.specification.target-file", openApiSpecificationFile.get().asFile.absolutePath)
 }

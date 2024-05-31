@@ -54,6 +54,19 @@ jobs:
           asset_name: tsa-linux-amd64
           asset_content_type: application/octet-stream
 
+      - name: Copy OpenAPI Spec to Temporary Folder
+        run: cp app/build/openapi-specification.json $RUNNER_TEMP/openapi-specification.json
+
+      - name: Upload OpenAPI Spec as Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ runner.temp }}/openapi-specification.json
+          asset_name: openapi-specification.json
+          asset_content_type: application/json
+
       - name: Build and Push JVM Images
         env:
           QUARKUS_CONTAINER_IMAGE_BUILD: true
