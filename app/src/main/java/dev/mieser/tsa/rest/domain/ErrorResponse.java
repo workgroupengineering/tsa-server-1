@@ -1,8 +1,18 @@
 package dev.mieser.tsa.rest.domain;
 
 /**
- * @param message
+ * Defines the general structure for API error responses.
  */
-public record ErrorResponse(String message) {
+public interface ErrorResponse {
+
+    /**
+     * @return The HTTP status code.
+     */
+    int status();
+
+    /**
+     * @return A message to describe what went wrong.
+     */
+    String message();
 
 }

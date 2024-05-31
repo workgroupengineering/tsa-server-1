@@ -17,14 +17,10 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import dev.mieser.tsa.domain.TimeStampValidationResult;
 import dev.mieser.tsa.integration.api.IssueTimeStampService;
 import dev.mieser.tsa.integration.api.ValidateTimeStampResponseService;
-import dev.mieser.tsa.rest.domain.ErrorResponse;
-import dev.mieser.tsa.rest.domain.HttpStatusCode;
-import dev.mieser.tsa.rest.domain.TsaMediaType;
-import dev.mieser.tsa.rest.domain.ValidationRequestForm;
+import dev.mieser.tsa.rest.domain.*;
 import dev.mieser.tsa.signing.api.exception.InvalidCertificateException;
 import dev.mieser.tsa.signing.api.exception.InvalidTspRequestException;
 import dev.mieser.tsa.signing.api.exception.InvalidTspResponseException;
-import io.quarkus.hibernate.validator.runtime.jaxrs.ViolationReport;
 
 @Transactional
 @Path("/")
@@ -78,7 +74,8 @@ public class TsaResource {
         @APIResponse(
                      responseCode = HttpStatusCode.BAD_REQUEST,
                      description = "When a request part is missing, the response/certificate cannot be parsed or the certificate uses an unsupported public key algorithm.",
-                     content = @Content(schema = @Schema(anyOf = { ErrorResponse.class, ViolationReport.class })))
+                     content = @Content(schema = @Schema(anyOf = { BasicErrorResponse.class,
+                         ConstraintViolationResponse.class })))
     })
     public TimeStampValidationResult validateWithCertificate(
         @Valid ValidationRequestForm validationRequestForm) throws InvalidTspResponseException, InvalidCertificateException {

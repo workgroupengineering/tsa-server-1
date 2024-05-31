@@ -1,6 +1,7 @@
 package dev.mieser.tsa.rest;
 
 import static jakarta.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
+import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Max;
@@ -23,8 +24,9 @@ import dev.mieser.tsa.integration.api.QueryTimeStampResponseService;
 import dev.mieser.tsa.persistence.api.Page;
 import dev.mieser.tsa.persistence.api.PageRequest;
 import dev.mieser.tsa.rest.converter.SortQueryParamConverter;
+import dev.mieser.tsa.rest.domain.BasicErrorResponse;
+import dev.mieser.tsa.rest.domain.ConstraintViolationResponse;
 import dev.mieser.tsa.rest.domain.HttpStatusCode;
-import io.quarkus.hibernate.validator.runtime.jaxrs.ViolationReport;
 
 @Transactional
 @Path("/history/responses")
@@ -50,7 +52,7 @@ public class ResponseHistoryResource {
     })
     public TimeStampResponseData findById(@PathParam("id") long id) {
         return queryTimeStampResponseService.findById(id)
-            .orElseThrow(NotFoundException::new);
+            .orElseThrow(this::buildNotFoundException);
     }
 
     @GET
@@ -63,7 +65,7 @@ public class ResponseHistoryResource {
         @APIResponse(
                      responseCode = HttpStatusCode.BAD_REQUEST,
                      description = "When a validation constraint is violated.",
-                     content = @Content(schema = @Schema(implementation = ViolationReport.class)))
+                     content = @Content(schema = @Schema(implementation = ConstraintViolationResponse.class)))
     })
     public Page<TimeStampResponseData> findAll(
         @DefaultValue("1") @QueryParam("page") @Min(1) int page,
@@ -85,7 +87,7 @@ public class ResponseHistoryResource {
     public Response deleteById(@PathParam("id") long id) {
         boolean deleted = deleteTimestampResponseService.deleteById(id);
         if (!deleted) {
-            throw new NotFoundException();
+            throw buildNotFoundException();
         }
 
         return Response.noContent().build();
@@ -101,6 +103,18 @@ public class ResponseHistoryResource {
     public Response deleteAll() {
         deleteTimestampResponseService.deleteAll();
         return Response.noContent().build();
+    }
+
+    /**
+     * @implNote According to the JAX-RS Specification (chapter 3.3.4), a {@link WebApplicationException} must contain a
+     * response to be handled by the standard exception handlers.
+     */
+    private NotFoundException buildNotFoundException() {
+        var response = Response.status(NOT_FOUND)
+            .entity(new BasicErrorResponse(NOT_FOUND.getStatusCode()))
+            .build();
+
+        return new NotFoundException(response);
     }
 
 }

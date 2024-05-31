@@ -26,11 +26,12 @@ import org.junit.jupiter.api.Test;
 import dev.mieser.tsa.domain.ResponseStatus;
 import dev.mieser.tsa.domain.TimeStampValidationResult;
 import dev.mieser.tsa.persistence.api.TspResponseDataRepository;
-import dev.mieser.tsa.rest.domain.ErrorResponse;
+import dev.mieser.tsa.rest.domain.BasicErrorResponse;
+import dev.mieser.tsa.rest.domain.ConstraintViolationResponse;
+import dev.mieser.tsa.rest.domain.ConstraintViolationResponse.ConstraintViolationResponseEntity;
 import dev.mieser.tsa.rest.domain.TsaMediaType;
 import dev.mieser.tsa.testutil.CertificateGenerator;
 import dev.mieser.tsa.testutil.TestKeyLoader;
-import io.quarkus.hibernate.validator.runtime.jaxrs.ViolationReport;
 import io.quarkus.narayana.jta.QuarkusTransaction;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
@@ -162,23 +163,26 @@ public class TsaResourceTest {
 
         @Test
         void returnsBadRequestWhenPartIsMissing() {
-            ViolationReport violationReport = RestAssured.given()
+            ConstraintViolationResponse violationResponse = RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON)
                 .multiPart("unknownPart", "part".getBytes())
                 .put("/validate-with-certificate")
                 .then().assertThat()
                 .statusCode(400)
                 .and()
-                .extract().as(ViolationReport.class);
+                .extract().as(ConstraintViolationResponse.class);
 
-            assertThat(violationReport.getViolations())
-                .extracting(ViolationReport.Violation::getMessage)
-                .containsExactlyInAnyOrder("x509Certificate part is missing.", "response part is missing.");
+            assertSoftly(softly -> {
+                softly.assertThat(violationResponse.status()).isEqualTo(400);
+                softly.assertThat(violationResponse.violations())
+                    .extracting(ConstraintViolationResponseEntity::message)
+                    .containsExactlyInAnyOrder("x509Certificate part is missing.", "response part is missing.");
+            });
         }
 
         @Test
         void returnsBadRequestWhenResponseIsInvalid() throws Exception {
-            ErrorResponse errorResponse = RestAssured.given()
+            BasicErrorResponse errorResponse = RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON)
                 .multiPart("response", FILE_NAME, "invalid".getBytes())
                 .multiPart("x509Certificate", FILE_NAME, TestKeyLoader.loadEcCertificate().getEncoded())
@@ -186,14 +190,14 @@ public class TsaResourceTest {
                 .then().assertThat()
                 .statusCode(400)
                 .and()
-                .extract().as(ErrorResponse.class);
+                .extract().as(BasicErrorResponse.class);
 
             assertThat(errorResponse.message()).isEqualTo("Could not parse TSP response");
         }
 
         @Test
         void returnsBadRequestWhenCertificateIsInvalid() throws IOException {
-            ErrorResponse errorResponse = RestAssured.given()
+            BasicErrorResponse errorResponse = RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON)
                 .multiPart("response", FILE_NAME, readValidTspResponse())
                 .multiPart("x509Certificate", FILE_NAME, "invalid".getBytes())
@@ -201,14 +205,14 @@ public class TsaResourceTest {
                 .then().assertThat()
                 .statusCode(400)
                 .and()
-                .extract().as(ErrorResponse.class);
+                .extract().as(BasicErrorResponse.class);
 
             assertThat(errorResponse.message()).contains("Could not parse certificate");
         }
 
         @Test
         void returnsBadRequestWhenCertificateUsesUnsupportedPublicKeyAlgorithm() throws Exception {
-            ErrorResponse errorResponse = RestAssured.given()
+            BasicErrorResponse errorResponse = RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON)
                 .multiPart("response", FILE_NAME, readValidTspResponse())
                 .multiPart("x509Certificate", FILE_NAME, CertificateGenerator.createEd25519Certificate().getEncoded())
@@ -216,7 +220,7 @@ public class TsaResourceTest {
                 .then().assertThat()
                 .statusCode(400)
                 .and()
-                .extract().as(ErrorResponse.class);
+                .extract().as(BasicErrorResponse.class);
 
             assertThat(errorResponse.message()).isEqualTo("Unsupported public key algorithm 'EdDSA'.");
         }
