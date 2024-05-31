@@ -71,7 +71,7 @@ jobs:
         env:
           QUARKUS_CONTAINER_IMAGE_BUILD: true
           QUARKUS_CONTAINER_IMAGE_PUSH: true
-          QUARKUS_PACKAGE_TYPE: jar
+          QUARKUS_PACKAGE_JAR_TYPE: mutable-jar
           QUARKUS_DOCKER_BUILDX_PLATFORM: linux/amd64,linux/arm64
         run: ./gradlew clean build -PimageTagSuffix=jvm
 
