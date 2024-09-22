@@ -2,13 +2,18 @@ package dev.mieser.tsa.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.process.ExecOperations
 import org.slf4j.LoggerFactory
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets.UTF_8
+import javax.inject.Inject
 
 /**
  * Sets the project version based on the [GITHUB_REF](https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables)
- * environment variable. When the `projectVersion` project property is set, its value is used as the project version.
+ * environment variable or the current branch name, when the environment variable is not set. When the `projectVersion` project property is set, its
+ * value is used as the project version.
  */
-class VersioningPlugin : Plugin<Project> {
+class VersioningPlugin @Inject constructor(private val execOperations: ExecOperations) : Plugin<Project> {
 
     private val log = LoggerFactory.getLogger(VersioningPlugin::class.java)
 
@@ -27,7 +32,7 @@ class VersioningPlugin : Plugin<Project> {
     }
 
     override fun apply(project: Project) {
-        determineVersion(project)?.run {
+        determineVersion(project).run {
             log.info("Setting project version to '{}'.", this)
             project.version = this
         }
@@ -40,13 +45,32 @@ class VersioningPlugin : Plugin<Project> {
         }
     }
 
-    private fun determineVersion(project: Project): String? {
+    private fun determineVersion(project: Project): String {
         if (project.hasProperty(PROJECT_VERSION_PROPERTY_NAME)) {
             log.info("Using the value of the '{}' property as the project version.", PROJECT_VERSION_PROPERTY_NAME)
             return project.property(PROJECT_VERSION_PROPERTY_NAME) as String
         }
 
-        return readRefFromEnvironment()?.run(::formatRef)
+        return readRefFromEnvironment()?.run(::formatRef) ?: determineVersionFromCurrentEnv()
+    }
+
+    private fun determineVersionFromCurrentEnv(): String {
+        log.info("Inferring project version from current git branch name...")
+
+        val standardOut = ByteArrayOutputStream()
+        try {
+            execOperations.exec {
+                commandLine("git", "symbolic-ref", "--short", "HEAD")
+                standardOutput = standardOut
+            }
+        } catch (e: Exception) {
+            log.info("Failed to execute git command! Is git installed?", e)
+            return Project.DEFAULT_VERSION
+        }
+
+        val currentBranch = standardOut.toString(UTF_8).trim()
+        log.info("Current branch: {}", currentBranch)
+        return "${currentBranch.substringAfterLast('/')}-$SNAPSHOT_SUFFIX"
     }
 
     private fun readRefFromEnvironment(): Ref? {
@@ -58,7 +82,11 @@ class VersioningPlugin : Plugin<Project> {
 
         val matcher = GITHUB_REF_FORMAT.toPattern().matcher(ref)
         if (!matcher.matches()) {
-            log.warn("The value of environment variable '{}' ('{}') does not match the expected format!", GITHUB_REF, ref)
+            log.warn(
+                "The value of environment variable '{}' ('{}') does not match the expected format!",
+                GITHUB_REF,
+                ref
+            )
             return null
         }
 
@@ -82,8 +110,8 @@ class VersioningPlugin : Plugin<Project> {
     }
 
     private data class Ref(
-            val type: Type,
-            val value: String
+        val type: Type,
+        val value: String
     )
 
     private enum class Type(val identifier: String) {
