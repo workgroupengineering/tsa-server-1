@@ -19,7 +19,7 @@ jobs:
           java-version: '21'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -35,9 +35,9 @@ jobs:
 
       - name: Build and Push Native Image
         env:
-          QUARKUS_CONTAINER_IMAGE_BUILD: true
           QUARKUS_CONTAINER_IMAGE_PUSH: true
-          QUARKUS_PACKAGE_TYPE: native
+          QUARKUS_PACKAGE_JAR_ENABLED: false
+          QUARKUS_NATIVE_ENABLED: true
           QUARKUS_NATIVE_COMPRESSION_LEVEL: 9
         run: ./gradlew clean build
 
@@ -69,8 +69,9 @@ jobs:
 
       - name: Build and Push JVM Images
         env:
-          QUARKUS_CONTAINER_IMAGE_BUILD: true
           QUARKUS_CONTAINER_IMAGE_PUSH: true
+          QUARKUS_PACKAGE_JAR_ENABLED: true
+          QUARKUS_NATIVE_ENABLED: false
           QUARKUS_PACKAGE_JAR_TYPE: mutable-jar
           QUARKUS_DOCKER_BUILDX_PLATFORM: linux/amd64,linux/arm64
         run: ./gradlew clean build -PimageTagSuffix=jvm

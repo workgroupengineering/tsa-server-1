@@ -78,7 +78,7 @@ class NativeApplicationSmokeTest {
             .extract()
             .as(new TypeRef<Page<TimeStampResponseData>>() {})
             .content()
-            .get(0);
+            .getFirst();
     }
 
 }

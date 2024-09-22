@@ -86,14 +86,26 @@ spotless {
 
 quarkus {
     set("native.container-build", "true")
+    set("container-image.build", "true")
     set("container-image.group", "dnl50")
     set("container-image.name", "tsa-server")
-    set("container-image.tag", objects.property<String>().value(provider {
+    set("container-image.tag", provider {
         if (project.hasProperty("imageTagSuffix")) {
             "${project.version}-${project.property("imageTagSuffix")}"
         } else {
             project.version.toString()
         }
-    }))
+    })
     finalName.set("tsa-${project.version}")
+}
+
+tasks.check {
+    dependsOn(tasks.testNative)
+}
+
+// for some reason quarkus does recognize that the JDBC URL is set in the prod profile. therefore it
+// creates a h2 db in server mode (using the H2DevServicesProcessor) which runs on the host machine and sets the JDBC URL
+// to something like "jdbc:h2:tcp://localhost:53233/mem:test" which obviously does not work inside the docker container
+tasks.testNative {
+    systemProperty("quarkus.datasource.jdbc.url", "jdbc:h2:file:/work/data/tsa")
 }
